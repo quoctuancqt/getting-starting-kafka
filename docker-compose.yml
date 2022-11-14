@@ -1,16 +1,16 @@
 version: '2.1'
 
 services:
-  mosquitto:
-    image: eclipse-mosquitto:latest
-    hostname: mosquitto
-    container_name: mosquitto
-    expose:
-     - "1883"
-    ports:
-      - "1883:1883"
-    volumes:
-      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+  # mosquitto:
+  #   image: eclipse-mosquitto:latest
+  #   hostname: mosquitto
+  #   container_name: mosquitto
+  #   expose:
+  #    - "1883"
+  #   ports:
+  #     - "1883:1883"
+  #   volumes:
+  #     - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
 
       
   zookeeper:
@@ -124,6 +124,7 @@ services:
         confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.4.0
         confluent-hub install --no-prompt confluentinc/kafka-connect-mqtt:latest
         confluent-hub install --no-prompt mongodb/kafka-connect-mongodb:1.8.0
+        confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
         /etc/confluent/docker/run
   
   ksqldb-server:
@@ -166,28 +167,37 @@ services:
       CONTROL_CENTER_STREAMS_CONSUMER_REQUEST_TIMEOUT_MS: "960032"
       CONTROL_CENTER_ID: "MY_C3"
 
-  mongo-db:
-    image: mongo:4.0.5
-    hostname: mongo-db
-    container_name: mongo-db
-    expose:
-      - "27017"
+  postgres:
+    image: postgres
+    container_name: postgres
     ports:
-      - "27017:27017"
-    command: --bind_ip_all --smallfiles
-    volumes:
-      - ./mongo-db:/data
-
-  mongoclient:
-    image: mongoclient/mongoclient:2.2.0
-    container_name: mongoclient
-    hostname: mongoclient
-    depends_on:
-      - mongo-db
-    ports:
-      - 3000:3000
+      - 5433:5432
     environment:
-      MONGO_URL: "mongodb://mongo-db:27017"
-      PORT: 3000
-    expose:
-      - "3000"
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  # mongo-db:
+  #   image: mongo:4.0.5
+  #   hostname: mongo-db
+  #   container_name: mongo-db
+  #   expose:
+  #     - "27017"
+  #   ports:
+  #     - "27017:27017"
+  #   command: --bind_ip_all --smallfiles
+  #   volumes:
+  #     - ./mongo-db:/data
+
+  # mongoclient:
+  #   image: mongoclient/mongoclient:2.2.0
+  #   container_name: mongoclient
+  #   hostname: mongoclient
+  #   depends_on:
+  #     - mongo-db
+  #   ports:
+  #     - 3000:3000
+  #   environment:
+  #     MONGO_URL: "mongodb://mongo-db:27017"
+  #     PORT: 3000
+  #   expose:
+  #     - "3000"

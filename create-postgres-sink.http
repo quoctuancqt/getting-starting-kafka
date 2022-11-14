@@ -1,0 +1,16 @@
+POST http://localhost:8083/connectors HTTP/1.1
+content-type: application/json
+
+{
+  "name": "jdbc-sink-connector",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "tasks.max": "1",
+    "topics": "mqtt.temperature",
+    "connection.url": "jdbc:postgresql://10.0.30.59:5433/test",
+    "connection.user": "postgres",
+    "connection.password": "postgres",
+    "connection.ds.pool.size": 5,
+    "auto.create": true
+  }
+}
