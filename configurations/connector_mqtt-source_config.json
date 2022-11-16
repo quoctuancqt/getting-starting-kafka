@@ -1,0 +1,15 @@
+{
+  "name": "mqtt-source-connector",
+  "config": {
+    "connector.class": "io.confluent.connect.mqtt.MqttSourceConnector",
+    "tasks.max": "1",
+    "errors.log.enable": "true",
+    "errors.log.include.messages": "true",
+    "mqtt.server.uri": "tcp://10.0.30.59:1883",
+    "kafka.topic": "device_telemetries",
+    "mqtt.topics": "temperature",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "io.confluent.connect.avro.AvroConverter",
+    "value.converter.schema.registry.url": "http://schema-registry:8081"
+  }
+}
