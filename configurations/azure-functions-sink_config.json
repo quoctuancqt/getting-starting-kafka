@@ -1,0 +1,24 @@
+{
+    "name": "azure-functions-sink",
+    "config": {
+      "topics": "MQTT_DEVICE_TELEMETRIES",
+      "tasks.max": "1",
+      "input.data.format": "JSON",
+      "connector.class": "io.confluent.connect.azure.functions.AzureFunctionsSinkConnector",
+      "function.url": "http://10.0.30.59:7071/api/update-gateway-status",
+      "function.key": "update-gateway-status",
+      "key.converter":"org.apache.kafka.connect.storage.StringConverter",
+      "value.converter":"org.apache.kafka.connect.storage.StringConverter",
+      "confluent.topic.bootstrap.servers": "10.0.30.59:9200",
+      "confluent.topic.replication.factor": "1",
+      "reporter.bootstrap.servers": "10.0.30.59:9200",
+      "reporter.error.topic.name": "test-error",
+      "reporter.error.topic.replication.factor": 1,
+      "reporter.error.topic.key.format": "string",
+      "reporter.error.topic.value.format": "string",
+      "reporter.result.topic.name": "test-result",
+      "reporter.result.topic.key.format": "string",
+      "reporter.result.topic.value.format": "string",
+      "reporter.result.topic.replication.factor": 1
+    }
+  }
