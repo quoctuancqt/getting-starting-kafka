@@ -87,7 +87,7 @@ services:
       - -c
       - |
         confluent-hub install --no-prompt confluentinc/kafka-connect-mqtt:latest
-        confluent-hub install --no-prompt mongodb/kafka-connect-mongodb:1.8.0
+        confluent-hub install --no-prompt confluentinc/kafka-connect-azure-functions:latest
         confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
         /etc/confluent/docker/run
 

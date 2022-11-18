@@ -5,7 +5,7 @@
     "tasks.max": "1",
     "errors.log.enable": "true",
     "errors.log.include.messages": "true",
-    "topics": "SINK_DEVICE_TELEMETRIES",
+    "topics": "DEVICE_TELEMETRIES",
     "connection.url": "jdbc:postgresql://10.0.30.59:5432/test",
     "connection.user": "postgres",
     "connection.password": "postgres",
