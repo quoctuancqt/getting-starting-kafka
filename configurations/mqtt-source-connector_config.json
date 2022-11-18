@@ -6,10 +6,9 @@
     "errors.log.enable": "true",
     "errors.log.include.messages": "true",
     "mqtt.server.uri": "tcp://10.0.30.59:1883",
-    "kafka.topic": "device_telemetries",
+    "kafka.topic": "DEVICE_TELEMETRIES",
     "mqtt.topics": "temperature",
-    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "value.converter": "io.confluent.connect.avro.AvroConverter",
-    "value.converter.schema.registry.url": "http://schema-registry:8081"
+    "value.converter": "org.apache.kafka.connect.converters.ByteArrayConverter",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter"
   }
 }
