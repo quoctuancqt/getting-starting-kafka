@@ -2,6 +2,7 @@
 using MQTTnet.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 var factory = new MqttFactory();
 
@@ -33,17 +34,40 @@ async Task Setup(IMqttClient mqttClient)
 
 async Task PublishTelemetry(IMqttClient mqttClient)
 {
+    var settings = new JsonSerializerSettings
+    {
+        ContractResolver = new CamelCasePropertyNamesContractResolver()
+    };
+
     var random = new Random();
     string key = "";
 
     while ((key = Console.ReadLine()) != "q")
     {
-        string payload = $$"""
-                {
-                    "temperature": {{random.NextDouble()}},
-                    "humidity": {{random.Next(30,50)}}
-                  }
-            """;
+        // string payload = $$"""
+        //         {
+        //             "temperature": {{random.NextDouble()}},
+        //             "humidity": {{random.Next(30,50)}}
+        //           }
+        //     """;
+
+        var data = new List<PingMessageModel>();
+        data.Add(new PingMessageModel
+        {
+            Type = "init",
+            Data = new object[] {
+                new { ModelNo = "SRMD01", SerialNo = "SRDE01" }
+            }
+        });
+        data.Add(new PingMessageModel
+        {
+            Type = "init",
+            Data = new object[] {
+                new { ModelNo = "SRMD01", SerialNo = "SRDE02" }
+            }
+        });
+
+        var payload = JsonConvert.SerializeObject(data, settings);
 
         Console.WriteLine($"Payload:{payload}");
 
@@ -92,4 +116,12 @@ async Task HandleDisconnect(MqttClientDisconnectedEventArgs e)
     {
         Console.WriteLine("Reconnect failed {0}:", ex.Message);
     };
+}
+
+class PingMessageModel
+{
+    public string SerialNumber { get; set; } = "GW01";
+    public DateTime LastUpdatedDate { get; set; } = DateTime.UtcNow;
+    public string Type { get; set; } = "init";
+    public dynamic[] Data { get; set; }
 }
