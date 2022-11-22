@@ -5,14 +5,15 @@
     "tasks.max": "1",
     "errors.log.enable": "true",
     "errors.log.include.messages": "true",
-    "topics": "DEVICE_TELEMETRIES",
-    "connection.url": "jdbc:postgresql://10.0.30.59:5432/test",
+    "topics": "KAFKA_DEVICE_TELEMETRIES",
+    "table.name.format": "DeviceTelemetries",
+    "connection.url": "jdbc:postgresql://10.0.30.59:5432/BmsDb",
     "connection.user": "postgres",
     "connection.password": "postgres",
     "auto.create": "true",
+    "auto.evolve": "true",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "transforms": "dropSysCols",
-    "transforms.dropSysCols.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
-    "transforms.dropSysCols.blacklist":"ROWKEY,ROWTIME"
+    "key.converter.schemas.enable": "true",
+    "errors.tolerance": "all"
   }
 }

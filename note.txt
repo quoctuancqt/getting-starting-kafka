@@ -1,8 +1,14 @@
-CREATE STREAM MQTT_DEVICE_TELEMETRIES(temperature DOUBLE,humidity BIGINT) WITH (kafka_topic ='MQTT_DEVICE_TELEMETRIES', value_format ='json');
+CREATE STREAM MQ2KAF_TOPIC_DATA(type VARCHAR,data ARRAY<STRUCT<modelNo VARCHAR, serialNo VARCHAR, onOff VARCHAR, batteryPercentage INT, speedSetting VARCHAR>>, serialNumber VARCHAR, lastUpdatedDate VARCHAR) 
+WITH (kafka_topic ='MQ2KAF_TOPIC', value_format ='json');
 
-CREATE STREAM DEVICE_TELEMETRIES WITH (VALUE_FORMAT='AVRO') AS
+CREATE STREAM KAFKA_DEVICE_TELEMETRIES WITH (VALUE_FORMAT='AVRO') AS
 	SELECT 
-    	temperature as "temperature",
-    	humidity as "humidity"
-  	FROM  MQTT_DEVICE_TELEMETRIES
+    	EXPLODE(DATA)-> SERIALNO as "DeviceSerialNo",
+        CAST(TO_JSON_STRING(EXPLODE(DATA)) AS VARCHAR) as "Data",
+        EXPLODE(DATA)-> ONOFF as "Operation",
+        LASTUPDATEDDATE as "CreatedAt"
+  	FROM  MQ2KAF_TOPIC_DATA
+    WHERE TYPE = 'telemetry'
 EMIT CHANGES;
+
+kafka-console-consumer --bootstrap-server localhost:9092 --topic MQ2KAF_TOPIC --from-beginning

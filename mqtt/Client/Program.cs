@@ -42,44 +42,56 @@ async Task PublishTelemetry(IMqttClient mqttClient)
     var random = new Random();
     string key = "";
 
-    while ((key = Console.ReadLine()) != "q")
+    while ((key = Console.ReadLine()!) != "q")
     {
-        // string payload = $$"""
-        //         {
-        //             "temperature": {{random.NextDouble()}},
-        //             "humidity": {{random.Next(30,50)}}
-        //           }
-        //     """;
+        string payload = "";
 
-        var data = new List<PingMessageModel>();
-        data.Add(new PingMessageModel
+        if (key == "1") // Send telemetry
         {
-            Type = "init",
-            Data = new object[] {
-                new { ModelNo = "SRMD01", SerialNo = "SRDE01" }
-            }
-        });
-        data.Add(new PingMessageModel
-        {
-            Type = "init",
-            Data = new object[] {
-                new { ModelNo = "SRMD01", SerialNo = "SRDE02" }
-            }
-        });
+            var data = new KafkaMessageModel
+            {
+                Data = new List<DeviceData>{
+                    new DeviceData
+                    {
+                        ModelNo = "SRMD01",
+                        SerialNo = "SRDE01",
+                        OnOff = "On",
+                        BatteryPercentage = 100,
+                        SpeedSetting = "LOW"
+                    }
+                },
+                Type = "telemetry"
+            };
 
-        var payload = JsonConvert.SerializeObject(data, settings);
+            payload = JsonConvert.SerializeObject(data, settings);
+        }
+
+        if (key == "2") // Send register device
+        {
+            var data = new KafkaMessageModel
+            {
+                Data = new List<DeviceData>{
+                    new DeviceData
+                    {
+                        ModelNo = "SRMD01",
+                        SerialNo = "SRDE03"
+                    }
+                },
+                Type = "init"
+            };
+
+            payload = JsonConvert.SerializeObject(data, settings);
+        }
 
         Console.WriteLine($"Payload:{payload}");
 
         var message = new MqttApplicationMessageBuilder()
-            .WithTopic("temperature")
+            .WithTopic("MQTT_TOPIC")
             .WithPayload(payload)
             .WithContentType("application/json")
             .Build();
 
         await mqttClient.PublishAsync(message);
-
-        Thread.Sleep(1000);
     }
 
     var mqttClientDisconnectOptions = factory.CreateClientDisconnectOptionsBuilder().Build();
@@ -118,10 +130,21 @@ async Task HandleDisconnect(MqttClientDisconnectedEventArgs e)
     };
 }
 
-class PingMessageModel
+
+
+class KafkaMessageModel
 {
-    public string SerialNumber { get; set; } = "GW01";
-    public DateTime LastUpdatedDate { get; set; } = DateTime.UtcNow;
+    public string GatewayNo { get; set; } = "GW01";
+    public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
     public string Type { get; set; } = "init";
-    public dynamic[] Data { get; set; }
+    public List<DeviceData> Data { get; set; } = new();
+}
+
+class DeviceData
+{
+    public string ModelNo { get; set; } = "";
+    public string SerialNo { get; set; } = "";
+    public string OnOff { get; set; } = "";
+    public int BatteryPercentage { get; set; } = 0;
+    public string SpeedSetting { get; set; } = "";
 }

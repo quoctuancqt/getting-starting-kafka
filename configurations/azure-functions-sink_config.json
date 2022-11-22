@@ -1,7 +1,7 @@
 {
     "name": "azure-functions-sink",
     "config": {
-      "topics": "MQTT_DEVICE_TELEMETRIES",
+      "topics": "MQ2KAF_TOPIC_DATA",
       "tasks.max": "1",
       "connector.class": "io.confluent.connect.azure.functions.AzureFunctionsSinkConnector",
       "key.converter":"org.apache.kafka.connect.storage.StringConverter",

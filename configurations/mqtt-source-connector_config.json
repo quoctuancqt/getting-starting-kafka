@@ -6,8 +6,8 @@
     "errors.log.enable": "true",
     "errors.log.include.messages": "true",
     "mqtt.server.uri": "tcp://10.0.30.59:1883",
-    "kafka.topic": "MQTT_DEVICE_TELEMETRIES",
-    "mqtt.topics": "temperature",
+    "kafka.topic": "MQ2KAF_TOPIC",
+    "mqtt.topics": "MQTT_TOPIC",
     "value.converter": "org.apache.kafka.connect.converters.ByteArrayConverter",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter"
   }
