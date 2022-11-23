@@ -1,4 +1,5 @@
-﻿using MQTTnet;
+﻿using System.Text;
+using MQTTnet;
 using MQTTnet.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -130,7 +131,17 @@ async Task HandleDisconnect(MqttClientDisconnectedEventArgs e)
     };
 }
 
+static class Extensions
+{
+    public static Dictionary<string, object> Parse(this byte[] bytes)
+    {
+        if (bytes is null) return default!;
 
+        string jsonStr = Encoding.UTF8.GetString(bytes);
+
+        return JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonStr)!;
+    }
+}
 
 class KafkaMessageModel
 {
