@@ -29,8 +29,6 @@ async Task Setup(IMqttClient mqttClient)
     var response = await mqttClient.ConnectAsync(mqttOptions);
 
     Console.WriteLine("The MQTT client is connected.");
-
-    response.DumpToConsole();
 }
 
 async Task PublishTelemetry(IMqttClient mqttClient)
