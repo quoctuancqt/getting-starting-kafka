@@ -8,7 +8,8 @@ using Newtonsoft.Json.Serialization;
 var factory = new MqttFactory();
 
 var mqttOptions = new MqttClientOptionsBuilder()
-   .WithTcpServer("localhost")
+   .WithTcpServer("192.168.2.25")
+    // .WithTcpServer("localhost")
    .Build();
 
 var mqttClient = factory.CreateMqttClient();
@@ -73,7 +74,7 @@ async Task PublishTelemetry(IMqttClient mqttClient)
                     new DeviceData
                     {
                         ModelNo = "SRMD01",
-                        SerialNo = "SRDE03"
+                        SerialNo = "SRDE02"
                     }
                 },
                 Type = "init"
@@ -143,7 +144,7 @@ static class Extensions
 
 class KafkaMessageModel
 {
-    public string GatewayNo { get; set; } = "GW01";
+    public string GatewayNo { get; set; } = "H-123";
     public DateTime LastUpdatedDate { get; set; } = DateTime.UtcNow;
     public string Type { get; set; } = "init";
     public List<DeviceData> Data { get; set; } = new();

@@ -1,4 +1,4 @@
-CREATE STREAM MQ2KAF_TOPIC_DATA("type" VARCHAR,"data" ARRAY<STRUCT<"modelNo" VARCHAR, "serialNo" VARCHAR, "onOff" VARCHAR, "batteryPercentage" INT, "speedSetting" VARCHAR>>, "serialNumber" VARCHAR, "lastUpdatedDate" VARCHAR) 
+CREATE STREAM MQ2KAF_TOPIC_DATA("type" VARCHAR,"data" ARRAY<STRUCT<"modelNo" VARCHAR, "serialNo" VARCHAR, "onOff" VARCHAR, "batteryPercentage" INT, "speedSetting" VARCHAR>>, "gatewayNo" VARCHAR, "lastUpdatedDate" VARCHAR) 
 WITH (kafka_topic ='MQ2KAF_TOPIC', value_format ='json');
 
 CREATE STREAM KAFKA_DEVICE_TELEMETRIES WITH (VALUE_FORMAT='AVRO') AS
