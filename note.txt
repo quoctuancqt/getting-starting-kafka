@@ -1,14 +1,14 @@
-CREATE STREAM MQ2KAF_TOPIC_DATA(type VARCHAR,data ARRAY<STRUCT<modelNo VARCHAR, serialNo VARCHAR, onOff VARCHAR, batteryPercentage INT, speedSetting VARCHAR>>, serialNumber VARCHAR, lastUpdatedDate VARCHAR) 
+CREATE STREAM MQ2KAF_TOPIC_DATA("type" VARCHAR,"data" ARRAY<STRUCT<"modelNo" VARCHAR, "serialNo" VARCHAR, "onOff" VARCHAR, "batteryPercentage" INT, "speedSetting" VARCHAR>>, "serialNumber" VARCHAR, "lastUpdatedDate" VARCHAR) 
 WITH (kafka_topic ='MQ2KAF_TOPIC', value_format ='json');
 
 CREATE STREAM KAFKA_DEVICE_TELEMETRIES WITH (VALUE_FORMAT='AVRO') AS
 	SELECT 
-    	EXPLODE(DATA)-> SERIALNO as "DeviceSerialNo",
-        CAST(TO_JSON_STRING(EXPLODE(DATA)) AS VARCHAR) as "Data",
-        EXPLODE(DATA)-> ONOFF as "Operation",
-        LASTUPDATEDDATE as "CreatedAt"
+    	EXPLODE("data")-> "serialNo" as "DeviceSerialNo",
+        CAST(TO_JSON_STRING(EXPLODE("data")) AS VARCHAR) as "Data",
+        EXPLODE("data")-> "onOff" as "Operation",
+        FROM_UNIXTIME(ROWTIME) as "CreatedAt"
   	FROM  MQ2KAF_TOPIC_DATA
-    WHERE TYPE = 'telemetry'
+    WHERE "type" = 'telemetry'
 EMIT CHANGES;
 
 kafka-console-consumer --bootstrap-server localhost:9092 --topic MQ2KAF_TOPIC --from-beginning

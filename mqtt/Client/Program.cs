@@ -135,7 +135,7 @@ async Task HandleDisconnect(MqttClientDisconnectedEventArgs e)
 class KafkaMessageModel
 {
     public string GatewayNo { get; set; } = "GW01";
-    public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
+    public DateTime LastUpdatedDate { get; set; } = DateTime.UtcNow;
     public string Type { get; set; } = "init";
     public List<DeviceData> Data { get; set; } = new();
 }
