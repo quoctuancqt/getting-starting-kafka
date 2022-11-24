@@ -1,7 +1,7 @@
 {
     "name": "azure-functions-sink",
     "config": {
-      "topics": "MQ2KAF_TOPIC_DATA",
+      "topics": "MQ2KAF_TOPIC",
       "tasks.max": "1",
       "connector.class": "io.confluent.connect.azure.functions.AzureFunctionsSinkConnector",
       "key.converter":"org.apache.kafka.connect.storage.StringConverter",
@@ -10,7 +10,7 @@
       "confluent.topic.replication.factor": "1",
       "confluent.license.topic.replication.factor": "1",
       "function.url": "http://10.0.30.59:7071/api/update-gateway-status",
-      "function.key": "",
+      "function.key": "*",
       "reporter.bootstrap.servers": "broker:9092",
       "reporter.error.topic.name": "test-error",
       "reporter.error.topic.replication.factor": 1,

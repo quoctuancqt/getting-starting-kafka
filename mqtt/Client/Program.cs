@@ -8,8 +8,8 @@ using Newtonsoft.Json.Serialization;
 var factory = new MqttFactory();
 
 var mqttOptions = new MqttClientOptionsBuilder()
-   .WithTcpServer("192.168.2.25")
-    // .WithTcpServer("localhost")
+//    .WithTcpServer("192.168.2.25")
+    .WithTcpServer("localhost")
    .Build();
 
 var mqttClient = factory.CreateMqttClient();
@@ -50,11 +50,12 @@ async Task PublishTelemetry(IMqttClient mqttClient)
         {
             var data = new KafkaMessageModel
             {
+                GatewayNo = "GW01",
                 Data = new List<DeviceData>{
                     new DeviceData
                     {
                         ModelNo = "SRMD01",
-                        SerialNo = "SRDE01",
+                        SerialNo = "SRDE03",
                         OnOff = "On",
                         BatteryPercentage = 100,
                         SpeedSetting = "LOW"
@@ -70,11 +71,12 @@ async Task PublishTelemetry(IMqttClient mqttClient)
         {
             var data = new KafkaMessageModel
             {
+                GatewayNo = "GW01",
                 Data = new List<DeviceData>{
                     new DeviceData
                     {
                         ModelNo = "SRMD01",
-                        SerialNo = "SRDE02"
+                        SerialNo = "SRDE01"
                     }
                 },
                 Type = "init"
@@ -87,6 +89,7 @@ async Task PublishTelemetry(IMqttClient mqttClient)
 
         var message = new MqttApplicationMessageBuilder()
             .WithTopic("MQTT_TOPIC")
+            // .WithTopic("MQ2KAF_TOPIC_DATA")
             .WithPayload(payload)
             .WithContentType("application/json")
             .Build();
