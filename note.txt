@@ -12,3 +12,18 @@ CREATE STREAM KAFKA_DEVICE_TELEMETRIES WITH (VALUE_FORMAT='AVRO') AS
 EMIT CHANGES;
 
 kafka-console-consumer --bootstrap-server localhost:9092 --topic MQ2KAF_TOPIC --from-beginning
+
+========================================================================================================================
+
+CREATE STREAM "mq2kaf_topic_data"("type" VARCHAR,"data" ARRAY<STRUCT<"modelNo" VARCHAR, "serialNo" VARCHAR, "onOff" VARCHAR, "batteryPercentage" INT, "speedSetting" VARCHAR>>, "gatewayNo" VARCHAR, "lastUpdatedDate" VARCHAR) 
+WITH (KAFKA_TOPIC ='mq2kaf_topic', VALUE_FORMAT ='JSON');
+
+CREATE STREAM "kafka_device_telemetries" WITH (VALUE_FORMAT='AVRO') AS
+	SELECT 
+    	EXPLODE("data")-> "serialNo" as "DeviceSerialNo",
+        CAST(TO_JSON_STRING(EXPLODE("data")) AS VARCHAR) as "Data",
+        EXPLODE("data")-> "onOff" as "Operation",
+        FROM_UNIXTIME(ROWTIME) as "CreatedAt"
+  	FROM  "mq2kaf_topic_data"
+    WHERE "type" = 'telemetry'
+EMIT CHANGES;
