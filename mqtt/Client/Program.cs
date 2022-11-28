@@ -5,11 +5,14 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
+var gatewayNo = "GW02";
+
 var factory = new MqttFactory();
 
 var mqttOptions = new MqttClientOptionsBuilder()
 //    .WithTcpServer("192.168.2.25")
     .WithTcpServer("localhost")
+    .WithCredentials(gatewayNo, "ZOCuPQ&q%$fniwtpT!fERAlWDNDwPkwuPlJSiYWDZpZbmtjQfCvgIjmOltIjGa@fLbOZboFHzQkqoGTPW!yc*JCWw@fN&FMHFhSvW$CuDiM@h*iPumg*zs*&r&s&aLJv")
    .Build();
 
 var mqttClient = factory.CreateMqttClient();
@@ -48,14 +51,13 @@ async Task PublishTelemetry(IMqttClient mqttClient)
 
         if (key == "1") // Send telemetry
         {
-            var data = new KafkaMessageModel
+            var data = new KafkaMessageModel(gatewayNo)
             {
-                GatewayNo = "GW01",
                 Data = new List<DeviceData>{
                     new DeviceData
                     {
                         ModelNo = "SRMD01",
-                        SerialNo = "SRDE03",
+                        SerialNo = "SRDE01",
                         OnOff = "On",
                         BatteryPercentage = 100,
                         SpeedSetting = "LOW"
@@ -67,11 +69,20 @@ async Task PublishTelemetry(IMqttClient mqttClient)
             payload = JsonConvert.SerializeObject(data, settings);
         }
 
+        if (key == "3")
+        {
+            var data = new KafkaMessageModel(gatewayNo)
+            {
+                Type = "ping"
+            };
+
+            payload = JsonConvert.SerializeObject(data, settings);
+        }
+
         if (key == "2") // Send register device
         {
-            var data = new KafkaMessageModel
+            var data = new KafkaMessageModel(gatewayNo)
             {
-                GatewayNo = "GW01",
                 Data = new List<DeviceData>{
                     new DeviceData
                     {
@@ -88,7 +99,7 @@ async Task PublishTelemetry(IMqttClient mqttClient)
         Console.WriteLine($"Payload:{payload}");
 
         var message = new MqttApplicationMessageBuilder()
-            .WithTopic("MQTT_TOPIC")
+            .WithTopic("mqtt_topic")
             // .WithTopic("MQ2KAF_TOPIC_DATA")
             .WithPayload(payload)
             .WithContentType("application/json")
@@ -147,10 +158,15 @@ static class Extensions
 
 class KafkaMessageModel
 {
-    public string GatewayNo { get; set; } = "H-123";
+    public string GatewayNo { get; private set; }
     public DateTime LastUpdatedDate { get; set; } = DateTime.UtcNow;
     public string Type { get; set; } = "init";
     public List<DeviceData> Data { get; set; } = new();
+
+    public KafkaMessageModel(string gwNo)
+    {
+        GatewayNo = gwNo;
+    }
 }
 
 class DeviceData
