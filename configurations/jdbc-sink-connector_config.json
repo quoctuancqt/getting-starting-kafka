@@ -5,7 +5,7 @@
     "tasks.max": "1",
     "errors.log.enable": "true",
     "errors.log.include.messages": "true",
-    "topics": "KAFKA_DEVICE_TELEMETRIES",
+    "topics": "kafka_device_telemetries",
     "table.name.format": "DeviceTelemetries",
     "connection.url": "jdbc:postgresql://10.0.30.59:5432/BmsDb",
     "connection.user": "postgres",

@@ -5,7 +5,7 @@
       "connection.uri":"mongodb://mongo-db:27017",
       "database":"testDb",
       "collection":"temperature",
-      "topics":"mqtt.temperature",
+      "topics":"mq2kaf_topic",
       "key.converter": "org.apache.kafka.connect.json.JsonConverter",
       "key.converter.schemas.enable": false,
       "value.converter": "org.apache.kafka.connect.json.JsonConverter",
